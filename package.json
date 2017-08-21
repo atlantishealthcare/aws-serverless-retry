@@ -1,0 +1,32 @@
+{
+  "name": "aws-serverless-retry",
+  "version": "1.0.0",
+  "description": "[AWS] Send payload to SNS retry topic based on configured codes",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodeunit tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atlantishealthcare/aws-serverless-retry.git"
+  },
+  "keywords": [
+    "aws",
+    "serverless",
+    "retry",
+    "sns"
+  ],
+  "author": "Pradeep Vattikuti",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/atlantishealthcare/aws-serverless-retry/issues"
+  },
+  "homepage": "https://github.com/atlantishealthcare/aws-serverless-retry#readme",
+  "dependencies": {
+    "aws-sdk": "^2.100.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "nodeunit": "^0.11.1"
+  }
+}
