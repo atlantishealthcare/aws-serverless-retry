@@ -1,5 +1,8 @@
 # Simple library to retry your payload using SNS
 
+[![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
+[![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
+
 Use SNS service subscription functionality to hook your AWS services to create, publish and retry
 
 Actions you can perform:  
