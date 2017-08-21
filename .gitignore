@@ -30,6 +30,7 @@ node_modules
 
 # Created by .ignore support plugin (hsz.mobi)
 
+*.iml
 .idea
-/node_modules/
-newrelic_agent.log
+node_modules
+lib-cov
