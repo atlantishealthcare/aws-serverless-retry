@@ -1,6 +1,6 @@
 "use strict";
 
-const SNSNotifier = require("../");
+const SNSNotifier = require("../lib/sns_notifier");
 
 module.exports.sendToTopicByStatusCodeTests = {
     testToSendItToSuccessTopicOn200: function (test) {

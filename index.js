@@ -1,3 +1,3 @@
-module.exports = process.env.YOURPACKAGE_COVERAGE
-    ? require('./lib-cov/sns_notifier')
-    : require('./lib/sns_notifier');
+module.exports = require('./lib/sns_notifier');
+module.exports = require('./lib/sqs_worker');
+
