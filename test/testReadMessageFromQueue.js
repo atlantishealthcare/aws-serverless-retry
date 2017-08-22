@@ -1,18 +1,15 @@
 "use strict";
 
-const SQSWorker = require("../lib/sqs_worker");
+const SQSService = require("../lib/sqsService");
 
 module.exports.readMessageFromQueueTests = {
     testToReadMessageIfExistsInQueue: function (test) {
-        let config = {
-            region: "us-west-2"
-        };
-
-        let sqsWorker = new SQSWorker(config);
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
         let queueName = "test";
-        sqsWorker.getQueueUrl(queueName)
+        sqsService.getQueueUrl(queueName)
             .then(response => {
-                return sqsWorker.readMessage(response.QueueUrl, 1);
+                return sqsService.readMessage(response.QueueUrl, 1);
             })
             .then(response => {
                 test.ok(response !== null);

@@ -1,23 +1,20 @@
 "use strict";
 
-const SQSWorker = require("../lib/sqs_worker");
+const SQSService = require("../lib/sqsService");
 
 module.exports.deleteMessageFromQueueTests = {
     testTodeleteMessageIfExistsInQueue: function (test) {
-        let config = {
-            region: "us-west-2"
-        };
-
-        let sqsWorker = new SQSWorker(config);
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
         let queueName = "test2";
-        sqsWorker.getQueueUrl(queueName)
+        sqsService.getQueueUrl(queueName)
             .then(response => {
-                return sqsWorker.readMessage(response.QueueUrl, 1);
+                return sqsService.readMessage(response.QueueUrl, 1);
             })
             .then(response => {
                 if (response && response.Messages.length > 0) {
                     let message = response.Messages[0];
-                    return sqsWorker.deleteMessage(response.QueueUrl, message.ReceiptHandle);
+                    return sqsService.deleteMessage(response.QueueUrl, message.ReceiptHandle);
                 }
             })
             .then(response => {

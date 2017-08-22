@@ -1,3 +1,5 @@
-module.exports = require('./lib/sns_notifier');
-module.exports = require('./lib/sqs_worker');
+module.exports = {
+    SNS: require('./lib/snsService'),
+    SQS: require('./lib/sqsService')
+};
 

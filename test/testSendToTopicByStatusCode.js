@@ -1,6 +1,6 @@
 "use strict";
 
-const SNSNotifier = require("../lib/sns_notifier");
+const SNSService = require("../lib/snsService");
 
 module.exports.sendToTopicByStatusCodeTests = {
     testToSendItToSuccessTopicOn200: function (test) {
@@ -15,13 +15,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let statusCode = 200;
         let payload = {
             "data": "Test"
         };
 
-        snsNotifier.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.successTopicName);
@@ -44,13 +44,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let statusCode = 400;
         let payload = {
             "data": "Test"
         };
 
-        snsNotifier.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.errorTopicName);
@@ -74,13 +74,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let statusCode = 500;
         let payload = {
             "data": "Test"
         };
 
-        snsNotifier.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.retryTopicName);
@@ -103,13 +103,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let statusCode = 201;
         let payload = {
             "data": "Test"
         };
 
-        snsNotifier.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.successTopicName);
@@ -132,12 +132,12 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let payload = {
             "data": "Test"
         };
 
-        snsNotifier.sendToTopicByStatusCode(null, payload)
+        snsService.sendToTopicByStatusCode(null, payload)
             .catch(err => {
                 test.ok(err !== null);
                 test.ok(err.message === "StatusCode is invalid");
@@ -156,10 +156,10 @@ module.exports.sendToTopicByStatusCodeTests = {
             errorTopicName: "error-topic"
         };
 
-        let snsNotifier = new SNSNotifier(config);
+        let snsService = new SNSService(config);
         let statusCode = 201;
 
-        snsNotifier.sendToTopicByStatusCode(statusCode)
+        snsService.sendToTopicByStatusCode(statusCode)
             .catch(err => {
                 test.ok(err !== null);
                 test.ok(err.message === "PayLoad is empty");

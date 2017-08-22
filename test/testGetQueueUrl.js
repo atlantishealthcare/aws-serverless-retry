@@ -1,16 +1,13 @@
 "use strict";
 
-const SQSWorker = require("../lib/sqs_worker");
+const SQSService = require("../lib/sqsService");
 
 module.exports.getQueueUrlTests = {
     testToGetQueueUrlForExisitingQueueName: function (test) {
-        let config = {
-            region: "us-west-2"
-        };
-
-        let sqsWorker = new SQSWorker(config);
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
         let queueName = "test";
-        sqsWorker.getQueueUrl(queueName)
+        sqsService.getQueueUrl(queueName)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.QueueUrl.includes("test"));
@@ -22,13 +19,10 @@ module.exports.getQueueUrlTests = {
             });
     },
     testToGetQueueUrlForNonExistingQueueName: function (test) {
-        let config = {
-            region: "us-west-2"
-        };
-
-        let sqsWorker = new SQSWorker(config);
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
         let queueName = "test2";
-        sqsWorker.getQueueUrl(queueName)
+        sqsService.getQueueUrl(queueName)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.QueueUrl.includes("test2"));

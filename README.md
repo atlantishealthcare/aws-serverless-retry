@@ -1,19 +1,16 @@
-# Simple library to retry your payload using SNS
+# Simple library to retry your payload using SNS, SQS and Lambda
 
 [![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
 [![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
 
-Use SNS service subscription functionality to hook your AWS services to create, publish and retry
+Use SNS and SQS services to hook your application for retrying your message with Lambda (recommended) or NodeJS app. 
 
-Actions you can perform:  
-- Create Topic
-- Publish to Topic by StatusCode 
+SNS service can send payload to topic (topic is decided based on configuration) which then gets delivered to queue 
+(if subscribed). Configuration is fully customizable. User can specify which topic to send it to based on the 
+status codes: retryStatusCodes, errorStatusCodes, successStatusCodes. 
 
-    Payload is published to appropriate topic based on statusCodes provided in configuration. If StatusCode is not listed in configuration it is
-    published to success topic by default.
-- Publish to Topic by Topic name
-
-Note: All functions return promise
+Messages from SQS can be consumed by Lambda (scheduled with interval) using SQS service. Specify no. of messages to read, 
+queue name, and destination topic and leave the rest to service to read, process, delete, and send it to destination topic 
 
 ## Installing
 
@@ -29,9 +26,10 @@ npm install aws-serverless-retry
 ##Usage and Getting Started
 
 ```javascript
-import ASR = require("aws-serverless-retry");
+const ASR = require("aws-serverless-retry");
+const SNS = ASR.SNS;
 
-//Create SNSNotifier and pass your configuration
+//Create SNSService and pass your configuration
 let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
@@ -42,7 +40,7 @@ let config = {
             successTopicName: "success-topic",
             errorTopicName: "error-topic"
         };
-let snsNotifier = new SNSNotifier(config);
+let snsService = new SNS.SNSService(config);
 
 //Params
 let statusCode = 200;
@@ -50,18 +48,152 @@ let payload = {
   "data": "Test"
 };
 
-//Now call sendToTopicByStatusCode by passing your parameters above
-snsNotifier.sendToTopicByStatusCode(statusCode, payload)
+//Now call sendToTopicByStatusCode
+snsService.sendToTopicByStatusCode(statusCode, payload)
            .then(response => {
                 //Success     
            })
            .catch(err => {
                 //Error
            });
-
-//Response
-{
-    topicName: "Success-Topic-Name",
-    .. //Stadard object that is returned from AWS-SDK
-}
 ```
+####Actions you can perform:  
+SNS:
+- createTopic(topicName)
+
+    Creates topic with the provided topic name. If topic exists it simply returns TopicArn
+    ```javascript  
+    let ASR = require("aws-serverless-retry");
+    let SNS = ASR.SNS;
+    let snsService = new SNS.SNSService(config);  
+    snsService.createTopic(topicName)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk response
+                    console.log(response.TopicArn)   
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
+- sendToTopicByStatusCode(statusCode, payload) 
+
+    Publishes payload to appropriate topic based on statusCodes provided in configuration. If StatusCode is not listed in configuration it is
+    published to success topic by default. If topic does't exists it creates topic and then sends payload to that topic
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SNS = ASR.SNS;
+    let snsService = new SNS.SNSService(config);
+    snsService.sendToTopicByStatusCode(statusCode, payload)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk response with additional TopicName property
+                    console.log(response.TopicName)   
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
+
+    
+- sendToTopic(topicName, payload)
+
+    Publishes payload to specified topic. If topic does't exists it creates topic and then sends payload to that topic
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SNS = ASR.SNS;
+    let snsService = new SNS.SNSService(config);
+    snsService.sendToTopic(topicName, payload)
+                .then(response => {
+                    //Success
+                    //response is standard aws-sdk response with additional TopicName property
+                    console.log(response.TopicName)   
+                })
+                .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+                });
+    ```
+
+SQS:
+- getQueueUrl(queueName)
+
+    Gets queue url if exists else creates new queue with the provided queue name
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SQS = ASR.SQS;
+    let region = "us-west-2";
+    let sqsService = new SNS.SQSService(region);
+    sqsService.getQueueUrl(queueName)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk response
+                    console.log(response.QueueUrl)   
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
+- readMessage(queueUrl, maxNumberOfMessagesToRead)
+
+    Reads message from Queue. If maxNumberOfMessagesToRead (range 1 to 10) is not valid it defaults to 10.
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SQS = ASR.SQS;
+    let region = "us-west-2";
+    let sqsService = new SNS.SQSService(region);
+    sqsService.readMessage("queueUrl", 5)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk response with additional property QueueUrl
+                    console.log(response.QueueUrl)   
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
+- deleteMessage(queueUrl, receiptHandle)
+
+    Delete message from Queue.
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SQS = ASR.SQS;
+    let region = "us-west-2";
+    let sqsService = new SNS.SQSService(region);
+    sqsService.deleteMessage("queueUrl", receiptHandle)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk response
+                    console.log(response.QueueUrl)   
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
+- processMessage(queueName, sqsConfig)
+
+    Reads message from Queue, Sends message to destination topic and Deletes message from Queue
+    ```javascript
+    let ASR = require("aws-serverless-retry");
+    let SQS = ASR.SQS;
+    let region = "us-west-2";    
+    let sqsService = new SNS.SQSService(region);
+    let sqsConfig = {
+      destinationTopicName: "destination-topic",
+      maxNumberOfMessagesToRead : 6
+    };
+    sqsService.processMessages("queueName", sqsConfig)
+               .then(response => {
+                    //Success
+                    //response is standard aws-sdk responses in array.                    
+               })
+               .catch(err => {
+                    //Error
+                    //err is standard aws-sdk error
+               });
+    ```
