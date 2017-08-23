@@ -23,7 +23,7 @@ Simply type the following into a terminal window:
 npm install aws-serverless-retry
 ```
 
-##Usage and Getting Started
+## Usage and Getting Started
 
 ```javascript
 const ASR = require("aws-serverless-retry");
@@ -57,7 +57,7 @@ snsService.sendToTopicByStatusCode(statusCode, payload)
                 //Error
            });
 ```
-####Actions you can perform:  
+#### Actions you can perform:  
 SNS:
 - createTopic(topicName)
 
