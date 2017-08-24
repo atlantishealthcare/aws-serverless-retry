@@ -36,12 +36,12 @@ const SNS = ASR.SNS;
 let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200, 201],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 let snsService = new SNS.SNSService(config);
 
@@ -65,7 +65,7 @@ snsService.sendToTopicByStatusCode(statusCode, payload)
 Set DEBUG environment variable to true to enable logging
 
 #### Actions you can perform:  
-SNS:
+SNS Service:
 - createTopic(topicName)
 
     Creates topic with the provided topic name. If topic exists it simply returns TopicArn
@@ -124,7 +124,7 @@ SNS:
                 });
     ```
 
-SQS:
+SQS Service:
 - getQueueUrl(queueName)
 
     Gets queue url if exists else creates new queue with the provided queue name
