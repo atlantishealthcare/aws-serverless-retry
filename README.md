@@ -10,7 +10,7 @@ Use SNS and SQS services to hook your application for retrying your message with
 
 SNS service can send payload to topic (topic is decided based on configuration) which then gets delivered to queue 
 (if subscribed). Configuration is fully customizable. User can specify which topic to send it to based on the 
-status codes: retryStatusCodes, errorStatusCodes, successStatusCodes. 
+status codes: retryStatusCodes, failureStatusCodes, successStatusCodes. 
 
 Messages from SQS can be consumed by Lambda (scheduled with interval) using SQS service. Specify no. of messages to read, 
 queue name, and destination topic and leave the rest to service to read, process, delete, and send it to destination topic 
@@ -30,7 +30,7 @@ npm install aws-serverless-retry
 
 ```javascript
 const ASR = require("aws-serverless-retry");
-const SNS = ASR.SNS;
+const SNSService = ASR.SNS;
 
 //Create SNSService and pass your configuration
 let config = {
@@ -43,7 +43,7 @@ let config = {
             successTopicName: "success-topic",
             failureTopicName: "error-topic"
         };
-let snsService = new SNS.SNSService(config);
+let snsService = new SNSService(config);
 
 //Params
 let statusCode = 200;
@@ -71,8 +71,18 @@ SNS Service:
     Creates topic with the provided topic name. If topic exists it simply returns TopicArn
     ```javascript  
     let ASR = require("aws-serverless-retry");
-    let SNS = ASR.SNS;
-    let snsService = new SNS.SNSService(config);  
+    let SNSService = ASR.SNS;
+    let config = {
+                region: "us-west-2", //required
+                retryStatusCodes: [500], //optional
+                failureStatusCodes: [400], //optional
+                successStatusCodes: [200, 201], //optional
+                maxRetryAttempts: 2, //optional
+                retryTopicName: "retry-topic", //required
+                successTopicName: "success-topic", //required
+                failureTopicName: "error-topic" //required
+            };
+    let snsService = new SNSService(config);  
     snsService.createTopic(topicName)
                .then(response => {
                     //Success
@@ -90,8 +100,8 @@ SNS Service:
     published to success topic by default. If topic does't exists it creates topic and then sends payload to that topic
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SNS = ASR.SNS;
-    let snsService = new SNS.SNSService(config);
+    let SNSService = ASR.SNS;
+    let snsService = new SNSService(config);
     snsService.sendToTopicByStatusCode(statusCode, payload)
                .then(response => {
                     //Success
@@ -110,8 +120,8 @@ SNS Service:
     Publishes payload to specified topic. If topic does't exists it creates topic and then sends payload to that topic
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SNS = ASR.SNS;
-    let snsService = new SNS.SNSService(config);
+    let SNSService = ASR.SNS;
+    let snsService = new SNSService(config);
     snsService.sendToTopic(topicName, payload)
                 .then(response => {
                     //Success
@@ -130,9 +140,9 @@ SQS Service:
     Gets queue url if exists else creates new queue with the provided queue name
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SQS = ASR.SQS;
+    let SQSService = ASR.SQS;
     let region = "us-west-2";
-    let sqsService = new SNS.SQSService(region);
+    let sqsService = new SQSService(region);
     sqsService.getQueueUrl(queueName)
                .then(response => {
                     //Success
@@ -149,9 +159,9 @@ SQS Service:
     Reads message from Queue. If maxNumberOfMessagesToRead (range 1 to 10) is not valid it defaults to 10.
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SQS = ASR.SQS;
+    let SQSService = ASR.SQS;
     let region = "us-west-2";
-    let sqsService = new SNS.SQSService(region);
+    let sqsService = new SQSService(region);
     sqsService.readMessage("queueUrl", 5)
                .then(response => {
                     //Success
@@ -168,9 +178,9 @@ SQS Service:
     Delete message from Queue.
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SQS = ASR.SQS;
+    let SQSService = ASR.SQS;
     let region = "us-west-2";
-    let sqsService = new SNS.SQSService(region);
+    let sqsService = new SQSService(region);
     sqsService.deleteMessage("queueUrl", receiptHandle)
                .then(response => {
                     //Success
@@ -186,23 +196,23 @@ SQS Service:
 
     Reads message from Queue, Sends message to destination topic and Deletes message from Queue. 
     - This function only processes message which are of type JSON. Any failures in processing will leave the message in queue.
-    - Once message maxRetryAttempt is reached, it is send to failure topic instead
+    - Once message maxRetryAttempt is reached, it will be sent to failure topic instead of retry topic
     ```javascript
     let ASR = require("aws-serverless-retry");
-    let SQS = ASR.SQS;
+    let SQSService = ASR.SQS;
     let region = "us-west-2";    
-    let sqsService = new SNS.SQSService(region);    
+    let sqsService = new SQSService(region);    
       
     let queueName = "queue-name"; //Required.Should be a valid queue name  
     let maxNumberOfMessagesToRead = 6; //Required. Can be any number between 1 to 10.     
-    let readConfigFromMessage = false; //Accepts either true/false.
-    //If false config values are retrieved from message body.
+    let readConfigFromMessage = true; //Accepts either true/false.
+    //If true config values are retrieved from message body.
     //Example: message.asrConfig = {
     //    retryTopicName: "",
     //    failureTopicName: "",
     //    maxRetryAttempts: 2
     // }
-    //If true config values are retrieved from sqsConfig which is passed as parameter
+    //If false config values are retrieved from sqsConfig which is passed as parameter
     //Example: sqsConfig : {
     //    retryTopicName: "",
     //    failureTopicName: "",
