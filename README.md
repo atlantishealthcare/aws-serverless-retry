@@ -57,6 +57,10 @@ snsService.sendToTopicByStatusCode(statusCode, payload)
                 //Error
            });
 ```
+
+####Logging
+Set DEBUG environment variable to true to enable logging
+
 #### Actions you can perform:  
 SNS:
 - createTopic(topicName)
@@ -88,8 +92,8 @@ SNS:
     snsService.sendToTopicByStatusCode(statusCode, payload)
                .then(response => {
                     //Success
-                    //response is standard aws-sdk response with additional TopicName property
-                    console.log(response.TopicName)   
+                    //response is standard aws-sdk response with additional topicName property
+                    console.log(response.topicName)   
                })
                .catch(err => {
                     //Error
@@ -108,8 +112,8 @@ SNS:
     snsService.sendToTopic(topicName, payload)
                 .then(response => {
                     //Success
-                    //response is standard aws-sdk response with additional TopicName property
-                    console.log(response.TopicName)   
+                    //response is standard aws-sdk response with additional topicName property
+                    console.log(response.topicName)   
                 })
                 .catch(err => {
                     //Error
@@ -177,17 +181,38 @@ SQS:
     ```
 - processMessage(queueName, sqsConfig)
 
-    Reads message from Queue, Sends message to destination topic and Deletes message from Queue
+    Reads message from Queue, Sends message to destination topic and Deletes message from Queue. 
+    - This function only processes message which are of type JSON. Any failures in processing will leave the message in queue.
+    - Once message maxRetryAttempt is reached, it is send to failure topic instead
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQS = ASR.SQS;
     let region = "us-west-2";    
-    let sqsService = new SNS.SQSService(region);
+    let sqsService = new SNS.SQSService(region);    
+      
+    let queueName = "queue-name"; //Required.Should be a valid queue name  
+    let maxNumberOfMessagesToRead = 6; //Required. Can be any number between 1 to 10.     
+    let readConfigFromMessage = false; //Accepts either true/false.
+    //If false config values are retrieved from message body.
+    //Example: message.asrConfig = {
+    //    retryTopicName: "",
+    //    failureTopicName: "",
+    //    maxRetryAttempts: 2
+    // }
+    //If true config values are retrieved from sqsConfig which is passed as parameter
+    //Example: sqsConfig : {
+    //    retryTopicName: "",
+    //    failureTopicName: "",
+    //    maxRetryAttempts: 2
+    // }
+  
+    
     let sqsConfig = {
-      destinationTopicName: "destination-topic",
-      maxNumberOfMessagesToRead : 6
-    };
-    sqsService.processMessages("queueName", sqsConfig)
+                        retryTopicName: "", //required
+                        failureTopicName: "", //required
+                        maxRetryAttempts: 2 //optional. Defaults to 1 if not provided
+                    };
+    sqsService.processMessages(queueName, maxNumberOfMessagesToRead, readConfigFromMessage, sqsConfig)
                .then(response => {
                     //Success
                     //response is standard aws-sdk responses in array.                    
