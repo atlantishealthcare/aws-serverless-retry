@@ -1,7 +1,7 @@
 {
   "name": "aws-serverless-retry",
   "version": "1.0.0",
-  "description": "[AWS] Send payload to SNS retry topic based on configured codes",
+  "description": "Simple library to retry your payload using SNS, SQS and Lambda",
   "main": "index.js",
   "scripts": {
     "test": "nodeunit test",

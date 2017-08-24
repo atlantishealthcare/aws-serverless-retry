@@ -8,11 +8,11 @@ module.exports.processQueueTests = {
         let sqsService = new SQSService(region);
         let queueName = "test";
         let queueConfig = {
-            maxNumberOfMessagesToRead : 1,
-            destinationTopicName : "test"
+            retryTopicName: "retry-topic",
+            failureTopicName: "error-topic"
         };
 
-        sqsService.processMessages(queueName, queueConfig)
+        sqsService.processMessages(queueName, 10, false, queueConfig)
             .then(response => {
                 test.ok(response !== null);
                 test.done();
