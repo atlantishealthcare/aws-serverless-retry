@@ -1,6 +1,6 @@
 {
   "name": "aws-serverless-retry",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple library to retry your payload using SNS, SQS and Lambda",
   "main": "index.js",
   "scripts": {
