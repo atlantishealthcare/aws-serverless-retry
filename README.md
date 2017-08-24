@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
 [![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
+[![npm version](https://badge.fury.io/js/aws-serverless-retry.svg)](https://badge.fury.io/js/aws-serverless-retry)
+
+[![NPM](https://nodei.co/npm/aws-serverless-retry.png?downloads=true)](https://nodei.co/npm-dl/aws-serverless-retry/)
 
 Use SNS and SQS services to hook your application for retrying your message with Lambda (recommended) or NodeJS app. 
 
