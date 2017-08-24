@@ -58,7 +58,7 @@ snsService.sendToTopicByStatusCode(statusCode, payload)
            });
 ```
 
-####Logging
+#### Logging
 Set DEBUG environment variable to true to enable logging
 
 #### Actions you can perform:  
@@ -204,8 +204,7 @@ SQS:
     //    retryTopicName: "",
     //    failureTopicName: "",
     //    maxRetryAttempts: 2
-    // }
-  
+    // }  
     
     let sqsConfig = {
                         retryTopicName: "", //required

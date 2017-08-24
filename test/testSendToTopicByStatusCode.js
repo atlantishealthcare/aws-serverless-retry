@@ -7,12 +7,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [],
-            errorStatusCodes: [],
+            failureStatusCodes: [],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
@@ -36,12 +36,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
@@ -53,7 +53,7 @@ module.exports.sendToTopicByStatusCodeTests = {
         snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
-                test.ok(response.topicName === config.errorTopicName);
+                test.ok(response.topicName === config.failureTopicName);
                 test.done();
             })
             .catch(err => {
@@ -66,12 +66,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
@@ -95,12 +95,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
@@ -124,12 +124,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
@@ -148,12 +148,12 @@ module.exports.sendToTopicByStatusCodeTests = {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
-            errorStatusCodes: [400],
+            failureStatusCodes: [400],
             successStatusCodes: [200],
             maxRetryAttempts: 2,
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            errorTopicName: "error-topic"
+            failureTopicName: "error-topic"
         };
 
         let snsService = new SNSService(config);
