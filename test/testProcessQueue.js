@@ -22,23 +22,22 @@ module.exports.processQueueTests = {
                 test.done();
             });
     },
-    //Cannot be tested in real time
-    /*testToProcessMessagePassesAndIgnoresMessageIfNotJSONMessage: function (test) {
+    testToProcessMessagePassesAndIgnoresMessageIfNotJSONMessage: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test3";
 
         sqsService.processMessages(queueName, 10, true)
             .then(response => {
                 test.ok(response !== null);
-                test.ok(response.message === "Message is not a valid JSON and cannot be deleted from Queue");
+                test.ok(response[0].message === "Message is not a valid JSON and cannot be deleted from Queue");
                 test.done();
             })
             .catch(err => {
                 //Only used by build server
                 test.done();
             });
-    },*/
+    },
     testToProcessMessageFailsWithMissingConfigWhenReadConfigFromMessageSetToFalse: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
@@ -96,7 +95,7 @@ module.exports.processQueueTests = {
     testToProcessMessagePassesWhenThereAreNoMessages: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test2";
 
         sqsService.processMessages(queueName, 10, true)
             .then(response => {

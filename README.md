@@ -194,8 +194,9 @@ SQS Service:
 - processMessage(queueName, sqsConfig)
 
     Reads message from Queue, Sends message to destination topic and Deletes message from Queue. 
-    - This function only processes message which are of type JSON. Any failures in processing will leave the message in queue.
-    - Once message maxRetryAttempt is reached, it will be sent to failure topic instead of retry topic
+    - Any failures in processing will leave the message in queue for safety and should be manually fixed.
+    - Once message maxRetryAttempt is reached, it will be sent to failure topic instead of trigger topic (destination topic)
+    Note: Messages can only be processed if it is send to queue using SNS service. And at this stage this function only accepts JSON messages.
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;

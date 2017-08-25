@@ -1,6 +1,9 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=2.0.0-->
+<!--LATEST=2.1.0-->
 <!--ENTRYINSERT-->
+
+## 2.1.0
+* feature: SQSService.processMessages --> Added functionality to remove asrConfig from original before it gets sent to trigger topic (Destination topic)
 
 ## 2.0.0
 * bugfix: Fixed issue with asrConfig invalid validation error when SQSService.processMessages is called  with readConfigFromMessage=true
