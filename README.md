@@ -196,6 +196,7 @@ SQS Service:
     Reads message from Queue, Sends message to destination topic and Deletes message from Queue. 
     - Any failures in processing will leave the message in queue for safety and should be manually fixed.
     - Once message maxRetryAttempt is reached, it will be sent to failure topic instead of trigger topic (destination topic)
+    
     Note: Messages can only be processed if it is send to queue using SNS service. And at this stage this function only accepts JSON messages.
     ```javascript
     let ASR = require("aws-serverless-retry");
