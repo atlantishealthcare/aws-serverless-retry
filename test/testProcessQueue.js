@@ -8,7 +8,7 @@ module.exports.processQueueTests = {
         let sqsService = new SQSService(region);
         let queueName = "test";
         let queueConfig = {
-            retryTopicName: "retry-topic",
+            triggerTopicName: "trigger-topic",
             failureTopicName: "error-topic"
         };
 
@@ -55,7 +55,7 @@ module.exports.processQueueTests = {
                 test.done();
             });
     },
-    testToProcessMessageFailsWithMissingRetryTopicWhenReadConfigFromMessageSetToFalse: function (test) {
+    testToProcessMessageFailsWithMissingTriggerTopicWhenReadConfigFromMessageSetToFalse: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
         let queueName = "test";
@@ -70,7 +70,7 @@ module.exports.processQueueTests = {
             })
             .catch(err => {
                 test.ok(err !== null);
-                test.ok(err.message === "retryTopicName missing from SQSConfig");
+                test.ok(err.message === "triggerTopicName missing from SQSConfig");
                 test.done();
             });
     },
@@ -79,7 +79,7 @@ module.exports.processQueueTests = {
         let sqsService = new SQSService(region);
         let queueName = "test";
         let queueConfig = {
-            retryTopicName: "retry-topic"
+            triggerTopicName: "trigger-topic"
         };
 
         sqsService.processMessages(queueName, 10, false, queueConfig)

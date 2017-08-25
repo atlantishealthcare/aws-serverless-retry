@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
 [![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
-[![npm version](https://badge.fury.io/js/aws-serverless-retry.svg)](https://badge.fury.io/js/aws-serverless-retry)
 
 [![NPM](https://nodei.co/npm/aws-serverless-retry.png?downloads=true)](https://nodei.co/npm-dl/aws-serverless-retry/)
 
@@ -38,7 +37,7 @@ let config = {
             retryStatusCodes: [500],
             failureStatusCodes: [400],
             successStatusCodes: [200, 201],
-            maxRetryAttempts: 2,
+            maxRetryAttempts: 2,            
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
             failureTopicName: "error-topic"
@@ -80,7 +79,7 @@ SNS Service:
                 maxRetryAttempts: 2, //optional
                 retryTopicName: "retry-topic", //required
                 successTopicName: "success-topic", //required
-                failureTopicName: "error-topic" //required
+                failureTopicName: "error-topic" //required                
             };
     let snsService = new SNSService(config);  
     snsService.createTopic(topicName)
@@ -206,21 +205,21 @@ SQS Service:
     let queueName = "queue-name"; //Required.Should be a valid queue name  
     let maxNumberOfMessagesToRead = 6; //Required. Can be any number between 1 to 10.     
     let readConfigFromMessage = true; //Accepts either true/false.
-    //If true config values are retrieved from message body.
+    //If true config values are retrieved from message body. It is assumed that asrConfig (as below) will get sent in message.
     //Example: message.asrConfig = {
-    //    retryTopicName: "",
+    //    triggerTopicName: "",
     //    failureTopicName: "",
     //    maxRetryAttempts: 2
     // }
     //If false config values are retrieved from sqsConfig which is passed as parameter
     //Example: sqsConfig : {
-    //    retryTopicName: "",
+    //    triggerTopicName: "",
     //    failureTopicName: "",
     //    maxRetryAttempts: 2
     // }  
     
     let sqsConfig = {
-                        retryTopicName: "", //required
+                        triggerTopicName: "", //required
                         failureTopicName: "", //required
                         maxRetryAttempts: 2 //optional. Defaults to 1 if not provided
                     };

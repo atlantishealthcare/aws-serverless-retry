@@ -2,10 +2,13 @@
 
 function tryParseJSON(jsonString) {
     try {
+        if (jsonString && typeof jsonString === "object") return jsonString;
+
         let o = JSON.parse(jsonString);
         if (o && typeof o === "object") {
             return o;
         }
+
     }
     catch (e) {
     }
@@ -13,8 +16,13 @@ function tryParseJSON(jsonString) {
     return false;
 }
 
-function validateASRConfig(asrConfig) {
-    return asrConfig && asrConfig.retryTopicName && asrConfig.failureTopicName && asrConfig.maxRetryAttempts;
+function validateASRConfig(asrConfig, serviceType) {
+    if (serviceType === "SQS") {
+        return asrConfig && asrConfig.triggerTopicName && asrConfig.failureTopicName && asrConfig.maxRetryAttempts;
+    } else if (serviceType === "SNS") {
+        return asrConfig && asrConfig.retryTopicName && asrConfig.failureTopicName && asrConfig.successTopicName && asrConfig.maxRetryAttempts;
+    }
+    return false;
 }
 
 function log(level, message, data) {
