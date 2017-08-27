@@ -14,6 +14,8 @@ status codes: retryStatusCodes, failureStatusCodes, successStatusCodes.
 Messages from SQS can be consumed by Lambda (scheduled with interval) using SQS service. Specify no. of messages to read, 
 queue name, and destination topic and leave the rest to service to read, process, delete, and send it to destination topic 
 
+If you are also looking for aws promise libraries? this library will nicely integrate with your code...
+
 ## Installing
 
 ### In Node.js
@@ -67,7 +69,9 @@ Set DEBUG environment variable to true to enable logging
 SNS Service:
 - createTopic(topicName)
 
-    Creates topic with the provided topic name. If topic exists it simply returns TopicArn
+    Creates topic with the provided topic name. If topic exists it simply returns promise response with TopicArn
+    
+    Response: Promise aws-sdk standard response
     ```javascript  
     let ASR = require("aws-serverless-retry");
     let SNSService = ASR.SNS;
@@ -82,7 +86,9 @@ SNS Service:
                 failureTopicName: "error-topic" //required                
             };
     let snsService = new SNSService(config);  
-    snsService.createTopic(topicName)
+    //Params
+    //topicName: string value.    
+    snsService.createTopic("topicName")
                .then(response => {
                     //Success
                     //response is standard aws-sdk response
@@ -95,12 +101,17 @@ SNS Service:
     ```
 - sendToTopicByStatusCode(statusCode, payload) 
 
-    Publishes payload to appropriate topic based on statusCodes provided in configuration. If StatusCode is not listed in configuration it is
-    published to success topic by default. If topic does't exists it creates topic and then sends payload to that topic
+    Publishes payload to appropriate topic (success/failure/retry) based on statusCodes provided in configuration. If passed in StatusCode is not listed in configuration it is
+    published to success topic by default. If topic does't exists it creates topic and then sends payload to that topic.
+    
+    Response: Promise aws-sdk standard publishTopic response with additional topicName property
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SNSService = ASR.SNS;
     let snsService = new SNSService(config);
+    //Params
+    //statusCode: integer value
+    //payload: JSON object only
     snsService.sendToTopicByStatusCode(statusCode, payload)
                .then(response => {
                     //Success
@@ -117,11 +128,16 @@ SNS Service:
 - sendToTopic(topicName, payload)
 
     Publishes payload to specified topic. If topic does't exists it creates topic and then sends payload to that topic
+    
+    Response: Promise aws-sdk standard publishTopic response with additional topicName property
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SNSService = ASR.SNS;
     let snsService = new SNSService(config);
-    snsService.sendToTopic(topicName, payload)
+    //Params
+    //topicName: string value
+    //payload: JSON object only
+    snsService.sendToTopic("topicName", payload)
                 .then(response => {
                     //Success
                     //response is standard aws-sdk response with additional topicName property
@@ -137,12 +153,14 @@ SQS Service:
 - getQueueUrl(queueName)
 
     Gets queue url if exists else creates new queue with the provided queue name
+    
+    Response: Promise aws-sdk standard response
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;
     let region = "us-west-2";
     let sqsService = new SQSService(region);
-    sqsService.getQueueUrl(queueName)
+    sqsService.getQueueUrl("queueName")
                .then(response => {
                     //Success
                     //response is standard aws-sdk response
@@ -156,12 +174,14 @@ SQS Service:
 - readMessage(queueUrl, maxNumberOfMessagesToRead)
 
     Reads message from Queue. If maxNumberOfMessagesToRead (range 1 to 10) is not valid it defaults to 10.
+    
+    Response: Promise aws-sdk standard response with additional QueueUrl property
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;
     let region = "us-west-2";
     let sqsService = new SQSService(region);
-    sqsService.readMessage("queueUrl", 5)
+    sqsService.readMessage("your-queueUrl", 5)
                .then(response => {
                     //Success
                     //response is standard aws-sdk response with additional property QueueUrl
@@ -175,6 +195,8 @@ SQS Service:
 - deleteMessage(queueUrl, receiptHandle)
 
     Delete message from Queue.
+    
+    Response: Promise aws-sdk standard response
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;
@@ -193,11 +215,15 @@ SQS Service:
     ```
 - processMessage(queueName, sqsConfig)
 
-    Reads message from Queue, Sends message to destination topic and Deletes message from Queue. 
+    Reads message from Queue, Sends message to destination topic, Deletes message from Queue and returns delete message response 
     - Any failures in processing will leave the message in queue for safety and should be manually fixed.
     - Once message maxRetryAttempt is reached, it will be sent to failure topic instead of trigger topic (destination topic)
     
-    Note: Messages can only be processed if it is send to queue using SNS service. And at this stage this function only accepts JSON messages.
+    Response: Promise delete SQS message aws-sdk standard response in array.  
+    
+    Note: 
+    - Messages can only be processed if it is send to queue using SNS service. 
+    - And the message payload format is of type JSON.
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;
@@ -209,26 +235,26 @@ SQS Service:
     let readConfigFromMessage = true; //Accepts either true/false.
     //If true config values are retrieved from message body. It is assumed that asrConfig (as below) will get sent in message.
     //Example: message.asrConfig = {
-    //    triggerTopicName: "",
-    //    failureTopicName: "",
+    //    triggerTopicName: "trigger-topic-name",
+    //    failureTopicName: "failure-topic-name",
     //    maxRetryAttempts: 2
     // }
     //If false config values are retrieved from sqsConfig which is passed as parameter
     //Example: sqsConfig : {
-    //    triggerTopicName: "",
-    //    failureTopicName: "",
+    //    triggerTopicName: "trigger-topic-name",
+    //    failureTopicName: "failure-topic-name",
     //    maxRetryAttempts: 2
     // }  
     
     let sqsConfig = {
-                        triggerTopicName: "", //required
-                        failureTopicName: "", //required
+                        triggerTopicName: "trigger-topic-name", //required
+                        failureTopicName: "failure-topic-name", //required
                         maxRetryAttempts: 2 //optional. Defaults to 1 if not provided
                     };
     sqsService.processMessages(queueName, maxNumberOfMessagesToRead, readConfigFromMessage, sqsConfig)
                .then(response => {
                     //Success
-                    //response is standard aws-sdk responses in array.                    
+                    //response is standard aws-sdk responses (SQS delete message) in array.                    
                })
                .catch(err => {
                     //Error
