@@ -12,9 +12,11 @@ module.exports.deleteMessageFromQueueTests = {
                 return sqsService.readMessage(response.QueueUrl, 1);
             })
             .then(response => {
-                if (response && response.Messages.length > 0) {
+                if (response && response.Messages && response.Messages.length > 0) {
                     let message = response.Messages[0];
                     return sqsService.deleteMessage(response.QueueUrl, message.ReceiptHandle);
+                } else {
+                    return Promise.resolve({});
                 }
             })
             .then(response => {

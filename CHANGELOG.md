@@ -1,6 +1,10 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=2.1.1-->
+<!--LATEST=2.1.2-->
 <!--ENTRYINSERT-->
+
+## 2.1.2
+* bugfix: SQSService.processMessages --> retryCount not getting updated when incoming message property is in lowercase
+* bugfix: SQSService.readMessage --> MessageCount log entry fails when there are no messages in the queue
 
 ## 2.1.1
 * docs: Updated README usage instructions.
