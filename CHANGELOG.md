@@ -1,9 +1,12 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=2.1.2-->
+<!--LATEST=2.1.3-->
 <!--ENTRYINSERT-->
 
+## 2.1.3
+* bugfix: SQSService.processMessages --> retryCount getting ignored resulting message to send it to trigger topic all times
+
 ## 2.1.2
-* bugfix: SQSService.processMessages --> retryCount not getting updated when incoming message property is in lowercase
+* bugfix: SNSService.sendToTopicByStatusCode --> retryCount not getting updated when incoming message property is in lowercase
 * bugfix: SQSService.readMessage --> MessageCount log entry fails when there are no messages in the queue
 
 ## 2.1.1
