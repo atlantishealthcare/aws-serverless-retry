@@ -1,6 +1,10 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=2.1.4-->
+<!--LATEST=2.1.5-->
 <!--ENTRYINSERT-->
+
+## 2.1.5
+* feature: SNSService.sendToTopicByStatusCode --> publish to failure topic instead of success topic when passed in successCode is unknown (not from configuration list) 
+* docs: Updated README usage instructions.
 
 ## 2.1.4
 * bugfix: SQSService.processMessages --> retryCount getting ignored (due to wrong property name) resulting message to send it to trigger topic all times

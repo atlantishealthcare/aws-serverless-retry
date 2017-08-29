@@ -42,7 +42,7 @@ let config = {
             maxRetryAttempts: 2,            
             retryTopicName: "retry-topic",
             successTopicName: "success-topic",
-            failureTopicName: "error-topic"
+            failureTopicName: "failure-topic"
         };
 let snsService = new SNSService(config);
 
@@ -83,7 +83,7 @@ SNS Service:
                 maxRetryAttempts: 2, //optional
                 retryTopicName: "retry-topic", //required
                 successTopicName: "success-topic", //required
-                failureTopicName: "error-topic" //required                
+                failureTopicName: "failure-topic" //required                
             };
     let snsService = new SNSService(config);  
     //Params
@@ -102,7 +102,7 @@ SNS Service:
 - sendToTopicByStatusCode(statusCode, payload) 
 
     Publishes payload to appropriate topic (success/failure/retry) based on statusCodes provided in configuration. If passed in StatusCode is not listed in configuration it is
-    published to success topic by default. If topic does't exists it creates topic and then sends payload to that topic.
+    published to failure topic by default. If topic does't exists it creates topic and then sends payload to that topic.
     
     Response: Promise aws-sdk standard publishTopic response with additional topicName property
     ```javascript

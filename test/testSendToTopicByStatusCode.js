@@ -91,7 +91,7 @@ module.exports.sendToTopicByStatusCodeTests = {
                 test.done();
             });
     },
-    testToSendItToSuccessTopicOnIfUnknown: function (test) {
+    testToSendItToFailureTopicOnIfUnknown: function (test) {
         let config = {
             region: "us-west-2",
             retryStatusCodes: [500],
@@ -112,7 +112,7 @@ module.exports.sendToTopicByStatusCodeTests = {
         snsService.sendToTopicByStatusCode(statusCode, payload)
             .then(response => {
                 test.ok(response !== null);
-                test.ok(response.topicName === config.successTopicName);
+                test.ok(response.topicName === config.failureTopicName);
                 test.done();
             })
             .catch(err => {
