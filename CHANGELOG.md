@@ -1,6 +1,10 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=2.1.5-->
+<!--LATEST=3.0.0-->
 <!--ENTRYINSERT-->
+
+## 3.0.0
+* feature: SNSService.sendToTopicByStatusCode --> Removed config parameter from constructor and added it to relevant function  
+* docs: Updated README usage instructions.
 
 ## 2.1.5
 * feature: SNSService.sendToTopicByStatusCode --> publish to failure topic instead of success topic when passed in successCode is unknown (not from configuration list) 

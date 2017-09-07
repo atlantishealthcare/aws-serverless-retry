@@ -5,7 +5,6 @@ const SNSService = require("../lib/snsService");
 module.exports.sendToTopicByStatusCodeTests = {
     testToSendItToSuccessTopicOn200: function (test) {
         let config = {
-            region: "us-west-2",
             retryStatusCodes: [],
             failureStatusCodes: [],
             successStatusCodes: [200],
@@ -15,13 +14,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let statusCode = 200;
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload, config)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.successTopicName);
@@ -34,7 +33,6 @@ module.exports.sendToTopicByStatusCodeTests = {
     },
     testToSendItToErrorTopicOn400: function (test) {
         let config = {
-            region: "us-west-2",
             retryStatusCodes: [],
             failureStatusCodes: [400],
             successStatusCodes: [200],
@@ -44,13 +42,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let statusCode = 400;
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload, config)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.failureTopicName);
@@ -60,11 +58,9 @@ module.exports.sendToTopicByStatusCodeTests = {
                 //Only used by build server
                 test.done();
             });
-        ;
     },
     testToSendItToRetryTopicOn500: function (test) {
         let config = {
-            region: "us-west-2",
             retryStatusCodes: [500],
             failureStatusCodes: [400],
             successStatusCodes: [200],
@@ -74,13 +70,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let statusCode = 500;
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload, config)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.retryTopicName);
@@ -93,7 +89,6 @@ module.exports.sendToTopicByStatusCodeTests = {
     },
     testToSendItToFailureTopicOnIfUnknown: function (test) {
         let config = {
-            region: "us-west-2",
             retryStatusCodes: [500],
             failureStatusCodes: [400],
             successStatusCodes: [200],
@@ -103,13 +98,13 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let statusCode = 201;
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(statusCode, payload)
+        snsService.sendToTopicByStatusCode(statusCode, payload, config)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.failureTopicName);
@@ -122,7 +117,6 @@ module.exports.sendToTopicByStatusCodeTests = {
     },
     testToFailIfStatusCodeIsInvalid: function (test) {
         let config = {
-            region: "us-west-2",
             retryStatusCodes: [500],
             failureStatusCodes: [400],
             successStatusCodes: [200],
@@ -132,12 +126,12 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(null, payload)
+        snsService.sendToTopicByStatusCode(null, payload, config)
             .catch(err => {
                 test.ok(err !== null);
                 test.ok(err.message === "StatusCode is invalid");
@@ -156,13 +150,27 @@ module.exports.sendToTopicByStatusCodeTests = {
             failureTopicName: "error-topic"
         };
 
-        let snsService = new SNSService(config);
+        let snsService = new SNSService("us-west-2");
         let statusCode = 201;
 
-        snsService.sendToTopicByStatusCode(statusCode)
+        snsService.sendToTopicByStatusCode(statusCode, null, config)
             .catch(err => {
                 test.ok(err !== null);
                 test.ok(err.message === "PayLoad is empty");
+                test.done();
+            });
+    },
+    testToFailIfConfigIsInvalid: function (test) {
+        let snsService = new SNSService("us-west-2");
+        let statusCode = 201;
+        let payload = {
+            "data": "Test"
+        };
+
+        snsService.sendToTopicByStatusCode(statusCode, payload)
+            .catch(err => {
+                test.ok(err !== null);
+                test.ok(err.message === "SNS config is invalid");
                 test.done();
             });
     }
