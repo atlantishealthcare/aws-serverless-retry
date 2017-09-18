@@ -33,27 +33,27 @@ npm install aws-serverless-retry
 const ASR = require("aws-serverless-retry");
 const SNSService = ASR.SNS;
 
-//Create SNSService and pass your configuration
-let config = {
-            region: "us-west-2",
-            retryStatusCodes: [500],
-            failureStatusCodes: [400],
-            successStatusCodes: [200, 201],
-            maxRetryAttempts: 2,            
-            retryTopicName: "retry-topic",
-            successTopicName: "success-topic",
-            failureTopicName: "failure-topic"
-        };
-let snsService = new SNSService(config);
+//Create SNSService
+let region = "us-west-2";
+let snsService = new SNSService(region);
 
 //Params
 let statusCode = 200;
 let payload = {
   "data": "Test"
 };
+let snsConfig = {    
+    retryStatusCodes: [500],
+    failureStatusCodes: [400],
+    successStatusCodes: [200, 201],
+    maxRetryAttempts: 2,            
+    retryTopicName: "retry-topic",
+    successTopicName: "success-topic",
+    failureTopicName: "failure-topic"
+};
 
 //Now call sendToTopicByStatusCode
-snsService.sendToTopicByStatusCode(statusCode, payload)
+snsService.sendToTopicByStatusCode(statusCode, payload, snsConfig)
            .then(response => {
                 //Success     
            })
@@ -74,18 +74,8 @@ SNS Service:
     Response: Promise aws-sdk standard response
     ```javascript  
     let ASR = require("aws-serverless-retry");
-    let SNSService = ASR.SNS;
-    let config = {
-                region: "us-west-2", //required
-                retryStatusCodes: [500], //optional
-                failureStatusCodes: [400], //optional
-                successStatusCodes: [200, 201], //optional
-                maxRetryAttempts: 2, //optional
-                retryTopicName: "retry-topic", //required
-                successTopicName: "success-topic", //required
-                failureTopicName: "failure-topic" //required                
-            };
-    let snsService = new SNSService(config);  
+    let SNSService = ASR.SNS;    
+    let snsService = new SNSService("us-west-2");  
     //Params
     //topicName: string value.    
     snsService.createTopic("topicName")
@@ -99,7 +89,7 @@ SNS Service:
                     //err is standard aws-sdk error
                });
     ```
-- sendToTopicByStatusCode(statusCode, payload) 
+- sendToTopicByStatusCode(statusCode, payload, snsConfig) 
 
     Publishes payload to appropriate topic (success/failure/retry) based on statusCodes provided in configuration. If passed in StatusCode is not listed in configuration it is
     published to failure topic by default. If topic does't exists it creates topic and then sends payload to that topic.
@@ -108,10 +98,20 @@ SNS Service:
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SNSService = ASR.SNS;
-    let snsService = new SNSService(config);
+    let snsService = new SNSService("us-west-2");
     //Params
     //statusCode: integer value
     //payload: JSON object only
+    //snsConfig: JSON object only
+    let snsConfig = {                    
+                    retryStatusCodes: [500], //optional
+                    failureStatusCodes: [400], //optional
+                    successStatusCodes: [200, 201], //optional
+                    maxRetryAttempts: 2, //optional, defaults to 1 is not provided
+                    retryTopicName: "retry-topic", //required
+                    successTopicName: "success-topic", //required
+                    failureTopicName: "failure-topic" //required                
+                };
     snsService.sendToTopicByStatusCode(statusCode, payload)
                .then(response => {
                     //Success
@@ -133,7 +133,7 @@ SNS Service:
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SNSService = ASR.SNS;
-    let snsService = new SNSService(config);
+    let snsService = new SNSService("us-west-2");
     //Params
     //topicName: string value
     //payload: JSON object only
