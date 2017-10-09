@@ -1,6 +1,9 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=3.0.0-->
+<!--LATEST=3.0.1-->
 <!--ENTRYINSERT-->
+
+## 3.0.1
+* docs: Updated README usage instructions.
 
 ## 3.0.0
 * feature: SNSService.sendToTopicByStatusCode --> Removed config parameter from constructor and added it to relevant function  
