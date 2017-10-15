@@ -1,7 +1,7 @@
 # Simple library to retry or poll your payload using SNS, SQS and Lambda
 
 [![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
-[![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
+[![codecov](https://codecov.io/gh/atlantishealthcare/aws-serverless-retry/branch/master/graph/badge.svg)](https://codecov.io/gh/atlantishealthcare/aws-serverless-retry)
 
 [![NPM](https://nodei.co/npm/aws-serverless-retry.png?downloads=true)](https://nodei.co/npm-dl/aws-serverless-retry/)
 
