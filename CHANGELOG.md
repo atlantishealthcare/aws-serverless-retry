@@ -1,6 +1,9 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=3.0.1-->
+<!--LATEST=3.1.0-->
 <!--ENTRYINSERT-->
+
+## 3.1.0
+* feature: SNSService.sendToTopic --> Add ability to set Subject and Phone number for email and SMS subscriptions
 
 ## 3.0.1
 * docs: Updated README usage instructions.

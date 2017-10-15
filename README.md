@@ -1,4 +1,4 @@
-# Simple library to retry your payload using SNS, SQS and Lambda
+# Simple library to retry or poll your payload using SNS, SQS and Lambda
 
 [![Build Status](https://travis-ci.org/atlantishealthcare/aws-serverless-retry.svg?branch=master)](https://travis-ci.org/atlantishealthcare/aws-serverless-retry)
 [![Coverage Status](https://coveralls.io/repos/github/atlantishealthcare/aws-serverless-retry/badge.svg?branch=master)](https://coveralls.io/github/atlantishealthcare/aws-serverless-retry?branch=master)
@@ -127,7 +127,7 @@ SNS Service:
     ```
 
     
-- sendToTopic(topicName, payload)
+- sendToTopic(topicName, payload, subject, phoneNumber)
 
     Publishes payload to specified topic. If topic does't exists it creates topic and then sends payload to that topic
     
@@ -139,7 +139,11 @@ SNS Service:
     //Params
     //topicName: string value
     //payload: JSON object only
-    snsService.sendToTopic("topicName", payload)
+    //subject: Optional parameter to be used as the "Subject" line when the message is delivered to email endpoints.
+    // Subjects must be ASCII text that begins with a letter, number, or punctuation mark; must not include line breaks 
+    // or control characters; and must be less than 100 characters long
+    //phoneNumber: Optional parameter. The phone number to which you want to deliver an SMS message
+    snsService.sendToTopic("topicName", payload, subject, phoneNumber)
                 .then(response => {
                     //Success
                     //response is standard aws-sdk response with additional topicName property
@@ -235,13 +239,13 @@ SQS Service:
     let queueName = "queue-name"; //Required.Should be a valid queue name  
     let maxNumberOfMessagesToRead = 6; //Required. Can be any number between 1 to 10.     
     let readConfigFromMessage = true; //Accepts either true/false.
-    //If true config values are retrieved from message body. It is assumed that asrConfig (as below) will get sent in message.
+    //If true, config values are retrieved from message body. It is assumed that asrConfig (as below) will get sent in message.
     //Example: message.asrConfig = {
     //    triggerTopicName: "trigger-topic-name",
     //    failureTopicName: "failure-topic-name",
     //    maxRetryAttempts: 2
     // }
-    //If false config values are retrieved from sqsConfig which is passed as parameter
+    //If false, config values are retrieved from sqsConfig which is passed as parameter
     //Example: sqsConfig : {
     //    triggerTopicName: "trigger-topic-name",
     //    failureTopicName: "failure-topic-name",
