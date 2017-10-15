@@ -229,7 +229,8 @@ SQS Service:
     
     Note: 
     - Messages can only be processed if it is send to queue using SNS service. 
-    - And the message payload format is of type JSON.
+    - And the message payload format is of type JSON.    
+    
     ```javascript
     let ASR = require("aws-serverless-retry");
     let SQSService = ASR.SQS;
