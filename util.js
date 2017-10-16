@@ -18,9 +18,9 @@ function tryParseJSON(jsonString) {
 
 function validateASRConfig(asrConfig, serviceType) {
     if (serviceType === "SQS") {
-        return asrConfig && asrConfig.triggerTopicName && asrConfig.failureTopicName && asrConfig.maxRetryAttempts;
+        return asrConfig && asrConfig.triggerTopicName && asrConfig.failureTopicName && asrConfig.maxRetryAttempts ? true : false;
     } else if (serviceType === "SNS") {
-        return asrConfig && asrConfig.retryTopicName && asrConfig.failureTopicName && asrConfig.successTopicName && asrConfig.maxRetryAttempts;
+        return asrConfig && asrConfig.retryTopicName && asrConfig.failureTopicName && asrConfig.successTopicName && asrConfig.maxRetryAttempts ? true : false;
     }
     return false;
 }
