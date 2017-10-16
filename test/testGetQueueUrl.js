@@ -32,5 +32,15 @@ module.exports.getQueueUrlTests = {
                 //Only used by build server
                 test.done();
             });
+    },
+    testToGetQueueUrlForInvalidQueueName: function (test) {
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
+        let queueName = "n@me";
+        sqsService.getQueueUrl(queueName)
+            .catch(err => {
+                //Only used by build server
+                test.done();
+            });
     }
 };

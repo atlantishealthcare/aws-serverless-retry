@@ -6,7 +6,7 @@ module.exports.processQueueTests = {
     testToProcessMessageIfExists: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test3";
         let queueConfig = {
             triggerTopicName: "trigger-topic",
             failureTopicName: "error-topic"
@@ -38,10 +38,26 @@ module.exports.processQueueTests = {
                 test.done();
             });
     },
+    testToProcessMessageFailsWithMissingQueueName: function (test) {
+        let region = "us-west-2";
+        let sqsService = new SQSService(region);
+        let queueName = "";
+
+        sqsService.processMessages(queueName, 10, false)
+            .then(response => {
+                test.ok(response !== null);
+                test.done();
+            })
+            .catch(err => {
+                test.ok(err !== null);
+                test.ok(err.message === "QueueName is empty");
+                test.done();
+            });
+    },
     testToProcessMessageFailsWithMissingConfigWhenReadConfigFromMessageSetToFalse: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test3";
 
         sqsService.processMessages(queueName, 10, false)
             .then(response => {
@@ -57,7 +73,7 @@ module.exports.processQueueTests = {
     testToProcessMessageFailsWithMissingTriggerTopicWhenReadConfigFromMessageSetToFalse: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test3";
         let sqsConfig = {
             failureTopicName: "error-topic"
         };
@@ -76,7 +92,7 @@ module.exports.processQueueTests = {
     testToProcessMessageFailsWithMissingFailureTopicWhenReadConfigFromMessageSetToFalse: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test";
+        let queueName = "test3";
         let queueConfig = {
             triggerTopicName: "trigger-topic"
         };
@@ -95,7 +111,7 @@ module.exports.processQueueTests = {
     testToProcessMessagePassesWhenThereAreNoMessages: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
-        let queueName = "test2";
+        let queueName = "test3";
 
         sqsService.processMessages(queueName, 10, true)
             .then(response => {

@@ -16,11 +16,12 @@ module.exports.sendToTopicByStatusCodeTests = {
 
         let snsService = new SNSService("us-west-2");
         let statusCode = 200;
+        let subject = "Test Subject";
         let payload = {
             "data": "Test"
         };
 
-        snsService.sendToTopicByStatusCode(statusCode, payload, config)
+        snsService.sendToTopicByStatusCode(statusCode, payload, config, subject)
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.topicName === config.successTopicName);

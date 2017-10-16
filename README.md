@@ -55,7 +55,7 @@ let snsConfig = {
 };
 
 //Now call sendToTopicByStatusCode
-snsService.sendToTopicByStatusCode(statusCode, payload, snsConfig)
+snsService.sendToTopicByStatusCode(statusCode, payload, snsConfig, subject)
            .then(response => {
                 //Success     
            })
@@ -91,7 +91,7 @@ SNS Service:
                     //err is standard aws-sdk error
                });
     ```
-- sendToTopicByStatusCode(statusCode, payload, snsConfig) 
+- sendToTopicByStatusCode(statusCode, payload, snsConfig, subject) 
 
     Publishes payload to appropriate topic (success/failure/retry) based on statusCodes provided in configuration. If passed in StatusCode is not listed in configuration it is
     published to failure topic by default. If topic does't exists it creates topic and then sends payload to that topic.
@@ -105,6 +105,9 @@ SNS Service:
     //statusCode: integer value
     //payload: JSON object only
     //snsConfig: JSON object only
+    //subject: Optional parameter to be used as the "Subject" line when the message is delivered to email endpoints.
+    // Subjects must be ASCII text that begins with a letter, number, or punctuation mark; must not include line breaks 
+    // or control characters; and must be less than 100 characters long 
     let snsConfig = {                    
                     retryStatusCodes: [500], //optional
                     failureStatusCodes: [400], //optional
