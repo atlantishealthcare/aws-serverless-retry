@@ -11,6 +11,14 @@ module.exports.utilTests = {
         test.deepEqual(inputJSON, result);
         test.done();
     },
+    testToTryParseJSONWithValidJSONAsString: function (test) {
+        let inputJSON = "{\"name\":\"test\"}";
+        let result = util.tryParseJSON(inputJSON);
+
+        test.ok(result !== null);
+        test.deepEqual({ "name": "test"}, result);
+        test.done();
+    },
     testToTryParseJSONReturnWithInValidJSON: function (test) {
         let inputJSON = "Invalid JSON";
         let result = util.tryParseJSON(inputJSON);
