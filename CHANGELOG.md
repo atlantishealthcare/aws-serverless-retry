@@ -1,6 +1,9 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=3.2.0-->
+<!--LATEST=3.2.1-->
 <!--ENTRYINSERT-->
+
+## 3.2.1
+* bugfix: Fix issue with validating ASR config 
 
 ## 3.2.0
 * feature: SNSService.sendToTopicByStatusCode --> Add ability to set Subject for email subscriptions
