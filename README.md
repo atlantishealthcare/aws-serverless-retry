@@ -16,6 +16,8 @@ queue name, and destination topic and leave the rest to service to read, process
 
 If you are also looking for aws promise libraries? this library will nicely integrate with your code...
 
+### Example solution diagram of how you can use this library to retry or poll your message
+
 ![alt tag](docs/Serverless%20Retry%20Solution%20Diagram.jpg "ASR solution reference diagram")
 
 ## Installing
@@ -117,7 +119,7 @@ SNS Service:
                     successTopicName: "success-topic", //required
                     failureTopicName: "failure-topic" //required                
                 };
-    snsService.sendToTopicByStatusCode(statusCode, payload)
+    snsService.sendToTopicByStatusCode(statusCode, payload, snsConfig, subject)
                .then(response => {
                     //Success
                     //response is standard aws-sdk response with additional topicName property
@@ -240,7 +242,7 @@ SQS Service:
     let region = "us-west-2";    
     let sqsService = new SQSService(region);    
       
-    let queueName = "queue-name"; //Required.Should be a valid queue name  
+    let queueName = "queue-name"; //Required. Should be a valid queue name  
     let maxNumberOfMessagesToRead = 6; //Required. Can be any number between 1 to 10.     
     let readConfigFromMessage = true; //Accepts either true/false.
     //If true, config values are retrieved from message body. It is assumed that asrConfig (as below) will get sent in message.
