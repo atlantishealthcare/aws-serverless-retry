@@ -3,7 +3,7 @@
 const SQSService = require("../lib/sqsService");
 
 module.exports.deleteMessageFromQueueTests = {
-    testTodeleteMessageIfExistsInQueue: function (test) {
+    testToDeleteMessageIfExistsInQueue: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
         let queueName = "test2";
@@ -28,7 +28,7 @@ module.exports.deleteMessageFromQueueTests = {
                 test.done();
             });
     },
-    testTodeleteMessageFailsWithInvalidQueueName: function (test) {
+    testToDeleteMessageFailsWithInvalidQueueName: function (test) {
         let region = "us-west-2";
         let sqsService = new SQSService(region);
         let queueName = "n@me";
