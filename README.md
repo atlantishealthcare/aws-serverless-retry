@@ -266,7 +266,10 @@ SQS Service:
     sqsService.processMessages(queueName, maxNumberOfMessagesToRead, readConfigFromMessage, sqsConfig)
                .then(response => {
                     //Success
-                    //response is standard aws-sdk responses (SQS delete message) in array.                    
+                    //response is standard aws-sdk responses (SQS delete message) in array with additional properties
+                    // as below  
+                    //response.hasPoisedMessage = <true/false>
+                    //response.messagesProcessed = <integer>                    
                })
                .catch(err => {
                     //Error

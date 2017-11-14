@@ -30,7 +30,9 @@ module.exports.processQueueTests = {
         sqsService.processMessages(queueName, 10, true)
             .then(response => {
                 test.ok(response !== null);
-                test.ok(response[0].message === "Message is not a valid JSON and cannot be deleted from Queue");
+                test.ok(response.responses !== null);
+                test.ok(response.responses[0].message === "Message is not a valid JSON and cannot be deleted from Queue");
+                test.ok(response.hasPoisedMessage === true);
                 test.done();
             })
             .catch(err => {
@@ -117,6 +119,8 @@ module.exports.processQueueTests = {
             .then(response => {
                 test.ok(response !== null);
                 test.ok(response.message === "No messages to process");
+                test.ok(response.messagesProcessed === 0);
+                test.ok(response.hasPoisedMessage === false);
                 test.done();
             })
             .catch(err => {
