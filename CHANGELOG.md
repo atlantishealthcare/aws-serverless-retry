@@ -1,6 +1,9 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=3.3.1-->
+<!--LATEST=3.3.2-->
 <!--ENTRYINSERT-->
+
+## 3.3.2
+* bugfix: sqsService.processMessage renamed hasPoisedMessage to hasPoisonMessage
 
 ## 3.3.1
 * feature: sqsService.processMessage returns two new properties hasPoisedMessage = <true/false>, messagesProcessed = <number> 

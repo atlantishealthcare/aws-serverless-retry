@@ -32,7 +32,7 @@ module.exports.processQueueTests = {
                 test.ok(response !== null);
                 test.ok(response.responses !== null);
                 test.ok(response.responses[0].message === "Message is not a valid JSON and cannot be deleted from Queue");
-                test.ok(response.hasPoisedMessage === true);
+                test.ok(response.hasPoisonMessage === true);
                 test.done();
             })
             .catch(err => {
@@ -120,7 +120,7 @@ module.exports.processQueueTests = {
                 test.ok(response !== null);
                 test.ok(response.message === "No messages to process");
                 test.ok(response.messagesProcessed === 0);
-                test.ok(response.hasPoisedMessage === false);
+                test.ok(response.hasPoisonMessage === false);
                 test.done();
             })
             .catch(err => {

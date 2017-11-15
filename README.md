@@ -268,7 +268,7 @@ SQS Service:
                     //Success
                     //response is standard aws-sdk responses (SQS delete message) in array with additional properties
                     // as below  
-                    //response.hasPoisedMessage = <true/false>
+                    //response.hasPoisonMessage = <true/false>
                     //response.messagesProcessed = <integer>                    
                })
                .catch(err => {
