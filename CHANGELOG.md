@@ -3,7 +3,7 @@
 <!--ENTRYINSERT-->
 
 ## 3.3.1
-* feature: sqsService.processMessage returns two new properties hasPoisedMessage = true/false, messagesProcessed = {number} 
+* feature: sqsService.processMessage returns two new properties hasPoisedMessage = <true/false>, messagesProcessed = <number> 
 
 ## 3.2.1
 * bugfix: Fix issue with validating ASR config 
