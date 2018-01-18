@@ -132,9 +132,9 @@ SNS Service:
     ```
 
     
-- sendToTopic(topicName, payload, subject, phoneNumber)
+- sendToTopic(topicName, payload, subject, phoneNumber, attributes)
 
-    Publishes payload to specified topic. If topic does't exists it creates topic and then sends payload to that topic
+    Publishes payload to specified topic. If topic doesn't exists it creates topic and then sends payload to that topic
     
     Response: Promise aws-sdk standard publishTopic response with additional topicName property
     ```javascript
@@ -148,7 +148,11 @@ SNS Service:
     // Subjects must be ASCII text that begins with a letter, number, or punctuation mark; must not include line breaks 
     // or control characters; and must be less than 100 characters long
     //phoneNumber: Optional parameter. The phone number to which you want to deliver an SMS message
-    snsService.sendToTopic("topicName", payload, subject, phoneNumber)
+    //attributes: Optional parameter. JSON object only. Sets the message attributes of the message so that the messages can be filtered by the attribute.
+    //    example, attributes: { "subscriberEmail": "subscriber1@email.com" }. If the topic subscriber assigns filter policy for 'subscriberEmail' attribute and
+    //    the attribute matches, then the subscriber receives the message.
+
+    snsService.sendToTopic("topicName", payload, subject, phoneNumber, attributes)
                 .then(response => {
                     //Success
                     //response is standard aws-sdk response with additional topicName property

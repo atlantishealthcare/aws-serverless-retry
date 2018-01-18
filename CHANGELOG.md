@@ -1,6 +1,10 @@
 # Changelog for aws-serverless-retry
-<!--LATEST=3.3.2-->
+<!--LATEST=3.3.3-->
 <!--ENTRYINSERT-->
+
+#3.3.3
+* feature: SNSService.sendToTopic --> Added the ability to set message attributes so that messages can be filtered by the attribute. To receive only a subset
+ of the messages, a subscriber will need to assign filter policy to the topic subscription.
 
 ## 3.3.2
 * bugfix: sqsService.processMessage renamed hasPoisedMessage to hasPoisonMessage
