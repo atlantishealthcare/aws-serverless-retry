@@ -32,6 +32,40 @@ module.exports.sendToTopicByStatusCodeTests = {
                 test.done();
             });
     },
+    testToSendItToSuccessTopicWithMessageAttributesOn200: function (test) {
+        let config = {
+            retryStatusCodes: [],
+            failureStatusCodes: [],
+            successStatusCodes: [200],
+            maxRetryAttempts: 2,
+            retryTopicName: "retry-topic",
+            successTopicName: "success-topic",
+            failureTopicName: "error-topic"
+        };
+
+        let snsService = new SNSService("us-west-2");
+        let statusCode = 200;
+        let subject = "Test Subject - Message Filtering";
+        let phoneNumber = '';
+        let attributes = {
+            "country": "subscriber-country",
+            "city": "subscriber-city"
+        };
+        let payload = {
+            "data": "Test"
+        };
+
+        snsService.sendToTopicByStatusCode(statusCode, payload, config, subject, phoneNumber, attributes)
+            .then(response => {
+                test.ok(response !== null);
+                test.ok(response.topicName === config.successTopicName);
+                test.done();
+            })
+            .catch(err => {
+                //Only used by build server
+                test.done();
+            });
+    },
     testToSendItToErrorTopicOn400: function (test) {
         let config = {
             retryStatusCodes: [],
